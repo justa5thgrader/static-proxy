@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Iframe Bypass</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Exo 2', Arial, sans-serif;
+            background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 100%);
+            color: #fff;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 800px;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 0 30px rgba(255, 0, 255, 0.5);
+            border: 1px solid #ff00ff;
+        }
+
+        h1 {
+            color: #ff00ff;
+            text-align: center;
+            font-family: 'Orbitron', sans-serif;
+            text-shadow: 0 0 10px #ff00ff;
+            margin-bottom: 30px;
+        }
+
+        .url-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .input-group {
+            position: relative;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 15px 20px 15px 50px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid #ff00ff;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 16px;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            box-shadow: 0 0 15px rgba(255, 0, 255, 0.7);
+        }
+
+        .input-group i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #ff00ff;
+            font-size: 20px;
+        }
+
+        button {
+            background: linear-gradient(45deg, #ff00ff, #00ffff);
+            color: #000;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Orbitron', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(255, 0, 255, 0.5);
+        }
+
+        .back-button {
+            margin-top: 30px;
+            background: rgba(0, 0, 0, 0.5);
+            color: #fff;
+            border: 1px solid #ff00ff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            background: rgba(255, 0, 255, 0.2);
+        }
+
+        .history-section {
+            margin-top: 40px;
+            border-top: 1px solid rgba(255, 0, 255, 0.3);
+            padding-top: 20px;
+        }
+
+        .history-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .history-title h2 {
+            color: #00ffff;
+            font-size: 1.5rem;
+            margin: 0;
+        }
+
+        .clear-history {
+            background: rgba(255, 0, 0, 0.3);
+            color: #fff;
+            border: 1px solid #ff0000;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .clear-history:hover {
+            background: rgba(255, 0, 0, 0.5);
+        }
+
+        .history-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-height: 200px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .history-item {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 0, 255, 0.3);
+            border-radius: 8px;
+            padding: 10px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .history-item:hover {
+            background: rgba(255, 0, 255, 0.1);
+            border-color: #ff00ff;
+        }
+
+        .history-item-title {
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .history-item-url {
+            color: #aaa;
+            font-size: 12px;
+            margin-top: 3px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 300px;
+        }
+
+        .history-item-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .history-item-actions button {
+            background: none;
+            border: none;
+            color: #00ffff;
+            cursor: pointer;
+            padding: 5px;
+            margin: 0;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .history-item-actions button:hover {
+            color: #ff00ff;
+            transform: translateY(0);
+            box-shadow: none;
+        }
+
+        .info-box {
+            margin-top: 30px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 10px;
+            padding: 15px;
+        }
+
+        .info-box h3 {
+            color: #00ffff;
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+
+        .info-box p {
+            color: #ccc;
+            font-size: 14px;
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(45deg, #ff00ff, #00ffff);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(45deg, #00ffff, #ff00ff);
+        }
+
+        /* Iframe container styles */
+        #iframe-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 9999;
+            background: #000;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1><i class="fas fa-shield-alt"></i> ADVANCED IFRAME BYPASS</h1>
+        
+        <form class="url-form" id="bypass-form">
+            <div class="input-group">
+                <i class="fas fa-link"></i>
+                <input type="url" id="url-input" placeholder="Enter website URL to bypass restrictions..." required>
+            </div>
+            <button type="submit">LAUNCH BYPASS</button>
+        </form>
+        
+        <button class="back-button" onclick="window.location.href='index.html'">
+            <i class="fas fa-arrow-left"></i> Back to Main Page
+        </button>
+        
+        <div class="history-section">
+            <div class="history-title">
+                <h2><i class="fas fa-history"></i> Recent Bypasses</h2>
+                <button class="clear-history" id="clear-history-btn">Clear History</button>
+            </div>
+            <div class="history-list" id="history-list">
+                <!-- History items will be added here by JavaScript -->
+            </div>
+        </div>
+        
+        <div class="info-box">
+            <h3><i class="fas fa-info-circle"></i> How It Works</h3>
+            <p>This advanced bypass uses a Cloudflare Worker to proxy website content, allowing you to access sites that normally block iframe embedding. All links within the bypassed site will continue to work through the proxy.</p>
+        </div>
+    </div>
+    
+    <!-- Iframe container for displaying bypassed content -->
+    <div id="iframe-container"></div>
+    
+    <!-- Include the iframe bypass script -->
+    <script src="iframe-bypass.js"></script>
+    <script>
+        // DOM Elements
+        const bypassForm = document.getElementById('bypass-form');
+        const urlInput = document.getElementById('url-input');
+        const historyList = document.getElementById('history-list');
+        const clearHistoryBtn = document.getElementById('clear-history-btn');
+        
+        // Form submission handler
+        bypassForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const url = urlInput.value.trim();
+            
+            if (url) {
+                // Use the iframe bypass system to open the URL
+                await window.iframeBypass.openGameWithBypass(url, 'Bypassed Site');
+                
+                // Clear the input
+                urlInput.value = '';
+                
+                // Refresh the history list
+                displayHistory();
+            }
+        });
+        
+        // Clear history button handler
+        clearHistoryBtn.addEventListener('click', function() {
+            if (confirm('Are you sure you want to clear your bypass history?')) {
+                localStorage.removeItem('bypassGames');
+                displayHistory();
+            }
+        });
+        
+        // Function to display the history list
+        function displayHistory() {
+            const storedGames = window.iframeBypass.getStoredEncodedGames();
+            historyList.innerHTML = '';
+            
+            if (storedGames.length === 0) {
+                historyList.innerHTML = '<div style="text-align: center; color: #aaa; padding: 10px;">No history yet</div>';
+                return;
+            }
+            
+            // Sort by timestamp (newest first)
+            storedGames.sort((a, b) => b.timestamp - a.timestamp);
+            
+            storedGames.forEach(game => {
+                const decodedUrl = window.iframeBypass.decodeGameUrl(game.encoded);
+                const historyItem = document.createElement('div');
+                historyItem.className = 'history-item';
+                
+                historyItem.innerHTML = `
+                    <div>
+                        <div class="history-item-title">${game.title}</div>
+                        <div class="history-item-url">${decodedUrl}</div>
+                    </div>
+                    <div class="history-item-actions">
+                        <button onclick="window.iframeBypass.openGameWithBypass('${decodedUrl}', '${game.title}')">
+                            <i class="fas fa-external-link-alt"></i> Open
+                        </button>
+                    </div>
+                `;
+                
+                historyList.appendChild(historyItem);
+            });
+        }
+        
+        // Close game function (will be called from within the iframe)
+        window.closeGame = function() {
+            const iframeContainer = document.getElementById('iframe-container');
+            if (iframeContainer) {
+                iframeContainer.style.display = 'none';
+                document.body.style.overflow = 'auto';
+                window.removeEventListener('keydown', window.iframeBypass.preventDefaultForGameKeys);
+            }
+        };
+        
+        // Toggle fullscreen function
+        window.toggleFullscreen = function() {
+            const gameFrame = document.querySelector('.game-frame');
+            if (gameFrame) {
+                if (document.fullscreenElement) {
+                    document.exitFullscreen();
+                } else {
+                    gameFrame.requestFullscreen().catch(err => {
+                        console.error('Error attempting to enable fullscreen:', err);
+                    });
+                }
+            }
+        };
+        
+        // Prevent default for game keys function
+        window.preventDefaultForGameKeys = function(e) {
+            // Prevent arrow keys and WASD from scrolling
+            if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'w', 'a', 's', 'd', ' '].includes(e.key)) {
+                e.preventDefault();
+            }
+        };
+        
+        // Display history on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            displayHistory();
+            
+            // Test worker connection
+            window.iframeBypass.testWorkerConnection()
+                .then(isConnected => {
+                    if (!isConnected) {
+                        alert('Warning: Could not connect to the bypass worker. Some features may not work correctly.');
+                    }
+                });
+        });
+    </script>
+</body>
+</html>
